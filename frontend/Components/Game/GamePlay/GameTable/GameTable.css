@@ -13,7 +13,7 @@ img {
 .leftPlayer {
     width: 20%;
     aspect-ratio: 4.2;
-    border: 2px solid #00b9be;
+    border: 2px solid var(--secondary-cyan);
     transform: translateY(0%);
     display: grid;
     grid-template-areas: "img player_info scor";
@@ -22,14 +22,14 @@ img {
 .rightPlayer {
     width: 20%;
     aspect-ratio: 4.2;
-    border: 2px solid #00b9be;
+    border: 2px solid var(--secondary-cyan);
     transform: translateY(0%) scaleX(-1);
     display: grid;
     grid-template-areas: "img player_info scor";
     grid-template-columns: 23.5% 35% 1fr;
 }
 #table {
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     width: 100%;
     height: 100%;
 }
@@ -47,7 +47,8 @@ img {
 }
 .GameShapes{
     position:absolute;
-    width: 90%;
+    width: 90%
+;
     aspect-ratio: 2.1;
     display: flex;
     justify-content: center;
@@ -61,17 +62,17 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 15px 15px 15px 15px;
+    border-radius: var(--border-radius);
 }
 
 .GamePlayer{
        position: absolute;
-       border : 1px solid #00b9be;
+       border : 1px solid var(--secondary-cyan);
     grid-area: img;
 }
 .GamePlayer1{
     position: absolute;
-    border : 1px solid #00b9be;
+    border : 1px solid var(--secondary-cyan);
     grid-area: img;
     transform: scaleX(-1);
 }
@@ -87,7 +88,7 @@ img {
 
 .playerinfo p, .playerinfo1 p{
     font-size: 1.6rem;
-    color: white;
+    color: var(--text-white);
 }
 
 .playerscor1{
@@ -100,13 +101,13 @@ img {
 
 .playerscor h1, .playerscor1 h1{
     font-size: 4rem;
-    color: white;
+    color: var(--text-white);
 }
 
 .rackita1 {
     width: 50%;
     height: 15%;
-    background-color: #00b9be;
+    background-color: var(--secondary-cyan);
 }
 
 .rackit_of_p1{
@@ -114,7 +115,7 @@ img {
     height: 12%;
     position: absolute;
     left: 0;
-    background-color: #ffffff;
+    background-color: var(--text-white);
 }
 
 .rackit_of_p2{
@@ -122,5 +123,5 @@ img {
     width: 1%;
     height: 12%;
     position: absolute;
-    background-color: #00b9be;
+    background-color: var(--secondary-cyan);
 }

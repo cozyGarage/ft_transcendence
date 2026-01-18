@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Othello Test - ft_transcendence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(73deg, #00142ba8 10%, #003347a8 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        h1 {
+            margin-bottom: 2rem;
+            color: #00FFFC;
+            text-shadow: 0 0 10px rgba(0, 255, 252, 0.5);
+        }
+        
+        :root {
+            --primary-cyan: #00FFFC;
+            --secondary-cyan: #00b9be;
+            --dark-blue: #00142b;
+            --medium-blue: #003347;
+            --text-white: #ffffff;
+            --border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Othello Game Test</h1>
+    <othello-game></othello-game>
+    
+    <script type="module">
+        // Import Othello components
+        import { OthelloGame } from '/Components/Game/GamePlay/Othello/OthelloGame.js';
+        
+        // Component is already registered in OthelloGame.js
+        console.log('Othello game loaded!');
+    </script>
+</body>
+</html>

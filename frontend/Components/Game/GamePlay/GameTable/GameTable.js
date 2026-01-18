@@ -162,7 +162,7 @@ export class GameTable extends HTMLElement {
     }
 
     async connectedCallback() {
-        if (this.state === "offline") {
+        if (this.state === "offline" || this.state === "ai") {
             await this.roundStart({ round: 1 });
             return;
         }
@@ -415,6 +415,7 @@ export class GameTable extends HTMLElement {
         const opponent = this.getOpponentPosition();
         this.requestID = requestAnimationFrame(() => this.gameLoop(ctx));
         await this.movePlayer(this.getKeys(), player, opponent);
+        if (this.state === 'ai') await this.moveAI(player, opponent);
         await this.moveBall(player, opponent, ctx);
         await this.renderBall(ctx);
         await this.RanderRackit(ctx, player);
@@ -485,7 +486,7 @@ export class GameTable extends HTMLElement {
 
     async moveBall(player, opponent, ctx) {
         if (this.pause === true) return;
-        if ( this.state === "offline" ) this.oflineCalculations(player, opponent, ctx);
+        if ( this.state === "offline" || this.state === "ai" ) this.oflineCalculations(player, opponent, ctx);
     }
 
     setMove = (event, keys) => {
@@ -521,10 +522,24 @@ export class GameTable extends HTMLElement {
         this.updateOpponentPosition(opponent.y);
     }
 
+    async moveAI(player, opponent) {
+        const ball = this.getCoordonates();
+        const center = opponent.y + this.racquet.height / 2;
+        
+        // Simple AI logic: track the ball
+        // Add a small deadzone to prevent jitter
+        if (ball.y > center + 10) {
+            this.moveDown(opponent);
+        } else if (ball.y < center - 10) {
+            this.moveUp(opponent);
+        }
+        this.updateOpponentPosition(opponent.y);
+    }
+
     moveDown(player) {
         let y = player.y;
         if (y + this.racquet.height <= CANVAS_HEIGHT) y += RACKET_SPEED;
-        if (this.state === "offline") {
+        if (this.state === "offline" || this.state === "ai") {
             player.y = y;
             return;
         }
@@ -538,7 +553,7 @@ export class GameTable extends HTMLElement {
     moveUp(player) {
         let y = player.y;
         if (y >= 0) y -= RACKET_SPEED;
-        if (this.state === "offline") {
+        if (this.state === "offline" || this.state === "ai") {
             player.y = y;
             return;
         }

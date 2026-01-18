@@ -100,8 +100,11 @@ export default class LoginPage extends HTMLElement {
 			const refreshBox = this.shadowRoot.querySelector("custom-spinner");
 			refreshBox.label = "Waiting..."
             refreshBox.display();
-            await this.submitForm(formData);
-            refreshBox.close();
+            try {
+                await this.submitForm(formData);
+            } finally {
+                refreshBox.close();
+            }
 		} else {
 			console.log("something wrong!")
 		}
@@ -123,7 +126,7 @@ export default class LoginPage extends HTMLElement {
 	
 			const data = await response.json();
 	
-			if (response.status == 200) {
+			if (response.ok) {
 				localStorage.setItem('accessToken', data.access_token);
 				router.handleRoute('/home')
 			}
@@ -132,12 +135,27 @@ export default class LoginPage extends HTMLElement {
 			}
 			else {
 				const eMsg = this.shadowRoot.querySelector('#error-message');
-				eMsg.textContent = data.detail;
+				let message = "Invalid email or password";
+				
+				if (data.errors) {
+					const firstField = Object.keys(data.errors)[0];
+					const firstError = data.errors[firstField];
+					message = Array.isArray(firstError) ? firstError[0] : firstError;
+				} else if (data.detail) {
+					message = data.detail;
+				} else if (data.message) {
+					message = data.message;
+				}
+				
+				eMsg.textContent = message;
 				eMsg.classList.remove('success');
 				eMsg.classList.add('show');
 			}
 		} catch (error) {
 			console.error('Error:', error);
+			const eMsg = this.shadowRoot.querySelector('#error-message');
+			eMsg.textContent = "Network error. Please try again later.";
+			eMsg.classList.add('show');
 		}
 	}
 }

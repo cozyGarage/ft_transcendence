@@ -21,29 +21,31 @@ import os
 load_dotenv()
 
 
-# Web3.py setup 
-SEPOLIA_URL = os.getenv('SEPOLIA_URL')
-CONTRACT_ADDRESS = os.getenv('CONTRACT_ADDRESS')
-PRIVATE_KEY = os.getenv('PRIVATE_KEY')
-GAS_LIMIT = int(os.getenv('GAS_LIMIT'))
-GAS_PRICE = int(os.getenv('GAS_PRICE'))
+# Web3.py setup - with defaults for optional blockchain features
+SEPOLIA_URL = os.getenv("SEPOLIA_URL") or os.getenv("WEB3_PROVIDER_URI")
+CONTRACT_ADDRESS = os.getenv(
+    "CONTRACT_ADDRESS", "0x0000000000000000000000000000000000000000"
+)
+PRIVATE_KEY = os.getenv("PRIVATE_KEY", "")
+GAS_LIMIT = int(os.getenv("GAS_LIMIT", "3000000"))
+GAS_PRICE = int(os.getenv("GAS_PRICE", "20"))
 
 w3 = Web3(Web3.HTTPProvider(SEPOLIA_URL))
 
 
 @csrf_exempt
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def store_tournament_score_on_blockchain(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             # Extract data from the request
-            tournament_id = int(request.data.get('tournamentId'))
-            winner_id = int(request.data.get('winnerId'))
-            winner_score = int(request.data.get('winnerIdScore'))
-            loser_id = int(request.data.get('loserId'))
-            loser_score = int(request.data.get('loserIdScore'))
-            CONTRACT_ABI = request.data.get('abi')
+            tournament_id = int(request.data.get("tournamentId"))
+            winner_id = int(request.data.get("winnerId"))
+            winner_score = int(request.data.get("winnerIdScore"))
+            loser_id = int(request.data.get("loserId"))
+            loser_score = int(request.data.get("loserIdScore"))
+            CONTRACT_ABI = request.data.get("abi")
             # get tournament
             tournament = Tournament.objects.get(tournament_id=tournament_id)
             # delete tournament
@@ -54,18 +56,16 @@ def store_tournament_score_on_blockchain(request):
             account = w3.eth.account.privateKeyToAccount(PRIVATE_KEY)
             # Build the transaction
             tx = contract.functions.storeScore(
-                tournament_id,
-                winner_id,
-                winner_score,
-                loser_id,
-                loser_score
-            ).buildTransaction({
-                'from': account.address,
-                'chainId': 11155111,  # Sepolia Testnet Chain ID
-                'gas': GAS_LIMIT,
-                'gasPrice': w3.toWei(GAS_PRICE, 'gwei'),
-                'nonce': w3.eth.getTransactionCount(account.address),
-            })
+                tournament_id, winner_id, winner_score, loser_id, loser_score
+            ).buildTransaction(
+                {
+                    "from": account.address,
+                    "chainId": 11155111,  # Sepolia Testnet Chain ID
+                    "gas": GAS_LIMIT,
+                    "gasPrice": w3.toWei(GAS_PRICE, "gwei"),
+                    "nonce": w3.eth.getTransactionCount(account.address),
+                }
+            )
             # Sign the transaction
             signed_txn = w3.eth.account.signTransaction(tx, private_key=PRIVATE_KEY)
             # Send the transaction
@@ -73,44 +73,58 @@ def store_tournament_score_on_blockchain(request):
                 tx_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
                 receipt = w3.eth.waitForTransactionReceipt(tx_hash, timeout=300)
                 scores = contract.functions.getScores(tournament_id).call()
-                return JsonResponse({
-                    'success': 'Player successfully score stored on blockchain',
-                    'txHash': tx_hash.hex(),
-                    'scores': scores
-                }, status=200)
+                return JsonResponse(
+                    {
+                        "success": "Player successfully score stored on blockchain",
+                        "txHash": tx_hash.hex(),
+                        "scores": scores,
+                    },
+                    status=200,
+                )
             except Exception as e:
-                return JsonResponse({'statusText': f'Error sending transaction: {str(e)}'}, status=403)
+                return JsonResponse(
+                    {"statusText": f"Error sending transaction: {str(e)}"}, status=403
+                )
         except Exception as e:
-            return JsonResponse({'statusText': str(e)}, status=404)
-    return JsonResponse({'statusText': 'Invalid request method'}, status=405)
-
+            return JsonResponse({"statusText": str(e)}, status=404)
+    return JsonResponse({"statusText": "Invalid request method"}, status=405)
 
 
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def get_tournament_by_id(request, tournamentId):
-    if request.method == 'GET':
+    if request.method == "GET":
         try:
             tournament = Tournament.objects.get(tournament_id=tournamentId)
         except Tournament.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(
+                {"status": "error", "message": "Tournament not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         serializer = TournamentSerializer(tournament)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"},
+        status=status.HTTP_405_METHOD_NOT_ALLOWED,
+    )
 
 
 @csrf_exempt
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def player_join_tournament(request, tournamentId):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             player = Player.objects.get(user=request.user)
             tournament = Tournament.objects.get(tournament_id=tournamentId)
             if not tournament.can_join:
-                return JsonResponse({'statusText': 'Tournament is not open for new players'}, status=400)
+                return JsonResponse(
+                    {"statusText": "Tournament is not open for new players"}, status=400
+                )
             if player in tournament.players.all():
-                return JsonResponse({'statusText': 'Player is already in the tournament'}, status=400)
+                return JsonResponse(
+                    {"statusText": "Player is already in the tournament"}, status=400
+                )
             tournament.players.add(player)
             tournament.save()
             serializer = TournamentSerializer(tournament)
@@ -119,70 +133,91 @@ def player_join_tournament(request, tournamentId):
                 tournament.save()
             return JsonResponse(serializer.data, status=status.HTTP_200_OK)
         except Player.DoesNotExist:
-            return JsonResponse({'statusText': 'Player not found'}, status=404)
+            return JsonResponse({"statusText": "Player not found"}, status=404)
         except Tournament.DoesNotExist:
-            return JsonResponse({'statusText': 'Tournament not found'}, status=404)
-    return JsonResponse({'statusText': 'Invalid request method'}, status=405)
+            return JsonResponse({"statusText": "Tournament not found"}, status=404)
+    return JsonResponse({"statusText": "Invalid request method"}, status=405)
+
 
 @csrf_exempt
 @permission_classes([IsAuthenticated])
 def SetStartDate(request):
-    if request.method == 'PUT':
+    if request.method == "PUT":
         try:
             data = JSONParser().parse(request)
-            tournamentId = data.get('tournamentId')
-            start_date = data.get('start_date')
+            tournamentId = data.get("tournamentId")
+            start_date = data.get("start_date")
             tournament = Tournament.objects.get(id=tournamentId)
             tournament.start_date = start_date
             tournament.save()
-            return JsonResponse('start date is updated !', safe=False, status=200)
+            return JsonResponse("start date is updated !", safe=False, status=200)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"}, status=405
+    )
+
 
 @permission_classes([IsAuthenticated])
-@api_view(['GET'])
+@api_view(["GET"])
 def get_tournaments_by_player_id(request):
-    if request.method == 'GET':
+    if request.method == "GET":
         try:
             player = Player.objects.get(user=request.user)
         except Player.DoesNotExist:
-            return JsonResponse({'error': 'Player not found'})
+            return JsonResponse({"error": "Player not found"})
 
-        tournaments = player.tournaments.all()  # Get all tournaments associated with the player
+        tournaments = (
+            player.tournaments.all()
+        )  # Get all tournaments associated with the player
         serializer = TournamentSerializer(tournaments, many=True)
         return JsonResponse(serializer.data, safe=False)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"}, status=405
+    )
+
 
 @permission_classes([IsAuthenticated])
-@api_view(['GET'])
+@api_view(["GET"])
 def get_available_tournaments(request):
-    if request.method == 'GET':
+    if request.method == "GET":
         tournamentName = request.GET.get("tournament_name")
         tournamentId = request.GET.get("tournament_id")
         if tournamentId and tournamentName:
-            tournaments = Tournament.objects.filter(can_join=True, tournament_id=tournamentId, tournament_name__contains=tournamentName)
-        elif tournamentId : 
-            tournaments = Tournament.objects.filter(can_join=True, tournament_id=tournamentId)
-        elif tournamentName : 
-            tournaments = Tournament.objects.filter(can_join=True, tournament_name__contains=tournamentName)
-        else :
+            tournaments = Tournament.objects.filter(
+                can_join=True,
+                tournament_id=tournamentId,
+                tournament_name__contains=tournamentName,
+            )
+        elif tournamentId:
+            tournaments = Tournament.objects.filter(
+                can_join=True, tournament_id=tournamentId
+            )
+        elif tournamentName:
+            tournaments = Tournament.objects.filter(
+                can_join=True, tournament_name__contains=tournamentName
+            )
+        else:
             tournaments = Tournament.objects.filter(can_join=True)
 
         serializer = TournamentSerializer(tournaments, many=True)
         return JsonResponse(serializer.data, safe=False, status=200)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"}, status=405
+    )
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @csrf_exempt
 def create_tournament(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             player = Player.objects.get(user=request.user)
         except Player.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'User doesn\'t Authenticated'}, status=403)
+            return JsonResponse(
+                {"status": "error", "message": "User doesn't Authenticated"}, status=403
+            )
         data = JSONParser().parse(request)
         serializer = TournamentSerializer(data=data)
         if serializer.is_valid():
@@ -191,25 +226,33 @@ def create_tournament(request):
             tournament.players.add(player)
             tournament.owner = player
             tournament.save()
-            return JsonResponse({'status': 'success', 'tournament': serializer.data}, status=201)
-        return JsonResponse({'status': 'error', 'errors': serializer.errors}, status=400)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+            return JsonResponse(
+                {"status": "success", "tournament": serializer.data}, status=201
+            )
+        return JsonResponse(
+            {"status": "error", "errors": serializer.errors}, status=400
+        )
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"}, status=405
+    )
 
 
 @csrf_exempt
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def player_leave_tournament(request, tournamentId):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             player = Player.objects.get(user=request.user)
             Nickname.objects.filter(player=player, tournamentid=tournamentId).delete()
             tournament = Tournament.objects.get(tournament_id=tournamentId)
             tournament.players.remove(player)
             tournament.save()
-            return JsonResponse({'success': 'Player successfully leaved the tournament'}, status=200)
+            return JsonResponse(
+                {"success": "Player successfully leaved the tournament"}, status=200
+            )
         except Player.DoesNotExist:
-            return JsonResponse({'statusText': 'Player not found'}, status=404)
+            return JsonResponse({"statusText": "Player not found"}, status=404)
         except Tournament.DoesNotExist:
-            return JsonResponse({'statusText': 'Tournament not found'}, status=404)
-    return JsonResponse({'statusText': 'Invalid request method'}, status=405)
+            return JsonResponse({"statusText": "Tournament not found"}, status=404)
+    return JsonResponse({"statusText": "Invalid request method"}, status=405)

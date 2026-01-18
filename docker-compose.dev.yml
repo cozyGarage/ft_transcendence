@@ -1,0 +1,48 @@
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
+services:
+  back-end:
+    build: ./devops
+    image: backend
+    container_name: back-end
+    volumes:
+      - ./backend/:/app
+      - ./devops/certs:/app/certs
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+    depends_on:
+      - database
+    env_file:
+      - .env
+  
+  front-end:
+    container_name: front-end
+    image: nginx:latest
+    ports:
+      - 443:443
+    volumes:
+      - ./dist/:/usr/share/nginx/html
+      - ./devops/nginx:/etc/nginx/conf.d
+      - ./devops/certs:/etc/ssl/certs
+      - ./blockchain/artifacts:/usr/share/nginx/html/artifacts
+    networks:
+      - app_network
+    depends_on:
+      - back-end
+
+  database:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    container_name: postgres
+    env_file:
+      - .env 
+    networks:
+      - app_network

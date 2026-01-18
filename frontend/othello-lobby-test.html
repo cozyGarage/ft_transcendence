@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Othello Lobby Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(73deg, #00142ba8 10%, #003347a8 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        :root {
+            --primary-cyan: #00FFFC;
+            --secondary-cyan: #00b9be;
+            --dark-blue: #00142b;
+            --medium-blue: #003347;
+            --text-white: #ffffff;
+            --border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <othello-lobby></othello-lobby>
+    
+    <script type="module">
+        // Mock router for testing
+        window.router = {
+            navigate: (path) => {
+                console.log('Navigate to:', path);
+                alert(`Would navigate to: ${path}\n\nIn production, this will load the online game!`);
+            }
+        };
+        
+        // Import lobby component
+        import { OthelloLobby } from '/Components/Game/GamePlay/Othello/OthelloLobby.js';
+        
+        console.log('Othello lobby loaded!');
+    </script>
+</body>
+</html>

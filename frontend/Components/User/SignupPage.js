@@ -76,8 +76,11 @@ export default class SignupPage extends HTMLElement {
             const refreshBox = this.shadowRoot.querySelector("custom-spinner");
             refreshBox.label = "Waiting..."
             refreshBox.display();
-            await this.submitForm(formData);
-            refreshBox.close();
+            try {
+                await this.submitForm(formData);
+            } finally {
+                refreshBox.close();
+            }
         }
     }
     
@@ -102,20 +105,31 @@ export default class SignupPage extends HTMLElement {
     }
     async submitForm(formData) {
         try {
-            
             const response = await this.registerUser(formData);
             const data = await response.json();
             
-            if (response.status !== 201) {
+            if (!response.ok) {
                 const shapeCpn = this.shadowRoot.querySelector('shape-cpn');
-                const errorMessage = data.username ? data.username : data.email;
-                shapeCpn.showError(`${errorMessage}`);
+                let message = "An error occurred during registration.";
+                
+                if (data.errors) {
+                    // Extract first error message from specific fields if available
+                    const firstField = Object.keys(data.errors)[0];
+                    const firstError = data.errors[firstField];
+                    message = Array.isArray(firstError) ? firstError[0] : firstError;
+                } else if (data.message) {
+                    message = data.message;
+                }
+                
+                shapeCpn.showError(message);
             }
             else {
                 router.handleRoute("/confirm-email");
             }
         } catch (error) {
             console.error("Error:", error);
+            const shapeCpn = this.shadowRoot.querySelector('shape-cpn');
+            shapeCpn.showError("Network error. Please try again later.");
         }
     }
 }

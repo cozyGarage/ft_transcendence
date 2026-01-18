@@ -343,11 +343,19 @@ export class Lobby extends HTMLElement{
 		p_img.src = userInfo.picture;
 		o_img.textContent = 'AI';
 		o_h1.textContent = 'AI';
-		this.createTimer('coming soon');
+        this.time = 4;
+		this.createTimer(this.time);
 		this.appendChild(AiGameTemplate.content.cloneNode(true));
-		this.createTimer('comming soon');
 		root.innerHTML = ``;
 		root.appendChild(this);
+        this.countdown = setInterval(async()=>{
+            this.time -= 1;
+            this.updateTimer();
+            if(this.time <= 0){
+                clearInterval(this.countdown)
+                await this.playeGame('ai', '', false);
+            }
+        }, 1000)
 	}
 	async playeGame(state, room_group_name, save){
 		clearInterval(this.interval)

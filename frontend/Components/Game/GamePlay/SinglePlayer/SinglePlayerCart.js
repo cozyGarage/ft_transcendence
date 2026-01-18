@@ -42,7 +42,9 @@ export class SinglePlayer extends HTMLElement{
         this.shadowRoot.appendChild(singlePlayerTemplate.content.cloneNode(true))
         const button = this.shadowRoot.querySelector('c-button')
             button.addEventListener('click', ()=>{
-                displayToast('error', 'Single Player Mode is not available yet')
+                const lobby = new Lobby();
+                router.randred = false
+                lobby.SinglePlayer();
             })
         this.classList.toggle('cart-animation', true)
         this.classList.toggle('opacity-0', true)

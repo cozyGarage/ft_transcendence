@@ -1,6 +1,4 @@
 
-
-
 import { Lobby } from "/Components/Game/GamePlay/Lobby/Lobby.js"
 import { Buttons } from "/Components/Game/GamePlay/GameTable/buttons.js"
 import { SinglePlayer } from '/Components/Game/GamePlay/SinglePlayer/SinglePlayerCart.js'
@@ -13,6 +11,10 @@ import { GameTable } from '/Components/Game/GamePlay/GameTable/GameTable.js'
 import { GameHeader } from '/Components/Game/GamePlay/GameTable/GameHeader.js'
 import { GameOver } from '/Components/Game/GamePlay/GameTable/GameOver.js'
 import { GameSelection } from '/Components/Game/GameSelection.js'
+import { OthelloCart } from '/Components/Game/GamePlay/Othello/OthelloCart.js'
+import { OthelloGame } from '/Components/Game/GamePlay/Othello/OthelloGame.js'
+import { OthelloOnlineGame } from '/Components/Game/GamePlay/Othello/OthelloOnlineGame.js'
+import { OthelloLobby } from '/Components/Game/GamePlay/Othello/OthelloLobby.js'
 
 import { HeaderBar } from '/Components/Header/header-bar.js'
 import { SearchBar } from '/Components/Header/Search-bar.js'
@@ -49,6 +51,10 @@ customElements.define('game-lobby', Lobby)
 customElements.define("single-player", SinglePlayer)
 customElements.define("multi-player", OflineGame)
 customElements.define("online-game", OnlineGame)
+customElements.define("othello-cart", OthelloCart)
+customElements.define("othello-game", OthelloGame)
+customElements.define("othello-online-game", OthelloOnlineGame)
+customElements.define("othello-lobby", OthelloLobby)
 customElements.define('c-button', Buttons)
 customElements.define('game-selection', GameSelection)
 

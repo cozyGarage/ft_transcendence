@@ -1,0 +1,15 @@
+# Vite Build Output
+dist/
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.vite/
+.cache/
+
+# Environment
+.env.local
+.env.*.local

@@ -1,0 +1,125 @@
+/* ===================================
+   RESPONSIVE ENHANCEMENTS
+   =================================== */
+
+/* Lazy loading image styles */
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+}
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 768px) {
+    /* Mobile phones */
+    .body-default-shrink {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto 1fr auto !important;
+        grid-template-areas: 
+            "head"
+            "content"
+            "foter" !important;
+    }
+    
+    side-bar {
+        display: none;
+    }
+    
+    root-content {
+        padding: 1rem;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Scale down large text on mobile */
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Tablets */
+    .body-default-shrink {
+        grid-template-columns: 5rem 1fr;
+        grid-template-rows: 10rem calc(100% - 14rem) 4rem;
+    }
+    
+    side-bar {
+        gap: 3rem;
+        margin-left: 2%;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1900px) {
+    /* Small desktops */
+    .body-default-shrink {
+        grid-template-columns: 5rem 1fr;
+    }
+}
+
+@media (min-width: 1901px) {
+    /* Large desktops */
+    .body-default-shrink {
+        grid-template-columns: 20rem 1fr;
+    }
+}
+
+/* Improve touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    a,
+    [role="button"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Performance optimizations */
+* {
+    /* Use CSS containment for better rendering performance */
+    contain: layout style;
+}
+
+img {
+    /* Prevent layout shifts */
+    height: auto;
+    max-width: 100%;
+    
+    /* Optimize image rendering */
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* Optimize font loading */
+@font-face {
+    font-family: 'Sansation';
+    src: url('/assets/fonts/sansation/Sansation_Regular.ttf');
+    font-display: swap; /* Show fallback font while loading */
+}
+
+@font-face {
+    font-family: 'Sansation Bold';
+    src: url('/assets/fonts/sansation/Sansation_Bold.ttf');
+    font-display: swap;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+    /* Already dark by default, but good to have */
+}

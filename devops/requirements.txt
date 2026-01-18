@@ -1,85 +1,172 @@
-psycopg2-binary
-Pillow
-daphne
-channels
-environ
-django-sslserver
-django-prometheus
-python-dotenv
-web3==5.27.0
+# Python 3.12 + Django 5.0 LTS Requirements
+# Updated: 2026-01-17
+# Compatibility: Python 3.12+, Django 5.0 LTS
 
-whitenoise==5.3.0
-daphne==3.0.2
-asgiref==3.8.1
-Django==4.2.13
-django-cors-headers==4.4.0
-django-environ==0.11.2
-django-ratelimit==4.1.0
+# ===================================
+# Core Django Stack
+# ===================================
+Django==5.0.11
 djangorestframework==3.15.2
 djangorestframework-simplejwt==5.3.1
-PyJWT==2.8.0
+
+# ===================================
+# ASGI & WebSockets
+# ===================================
+daphne==4.1.2
+channels==4.2.0
+channels-redis==4.2.1
+asgiref==3.8.1
+
+# ===================================
+# Database
+# ===================================
+psycopg2-binary==2.9.10
+
+# ===================================
+# Authentication & Security
+# ===================================
+django-allauth==64.2.1
+PyJWT==2.9.0
 pyotp==2.9.0
-six==1.16.0
-sqlparse==0.5.0
-typing_extensions==4.12.1
-qrcode
+qrcode==8.0
 
+# ===================================
+# CORS & Environment
+# ===================================
+django-cors-headers==4.6.0
+django-environ==0.11.2
+python-dotenv==1.0.1
 
+# ===================================
+# Security & Input Validation
+# ===================================
+bleach==6.2.0
+cryptography==44.0.0
+defusedxml==0.7.1
 
-amqp==5.2.0
-attrs==23.2.0
-autobahn==23.6.2
-Automat==22.10.0
-backports.zoneinfo==0.2.1
-billiard==3.6.4.0
-bleach==3.3.0
-cached-property==1.5.2
-celery==5.2.2
-certifi==2023.7.22
-cffi==1.16.0
-chardet==3.0.4
-charset-normalizer==3.3.2
-click==8.1.7
+# ===================================
+# Static Files & Media
+# ===================================
+whitenoise==6.8.2
+Pillow==11.0.0
+
+# ===================================
+# Monitoring & Metrics
+# ===================================
+django-prometheus==2.3.1
+
+# ===================================
+# Rate Limiting
+# ===================================
+django-ratelimit==4.1.0
+
+# ===================================
+# SSL Server (Development)
+# ===================================
+django-sslserver==0.22
+
+# ===================================
+# Web3 & Blockchain
+# ===================================
+web3==7.7.0
+
+# ===================================
+# HTTP & Networking
+# ===================================
+requests==2.32.3
+requests-oauthlib==2.0.0
+urllib3==2.3.0
+certifi==2026.1.4
+oauthlib==3.2.2
+
+# ===================================
+# Celery & Task Queue
+# ===================================
+celery==5.4.0
+redis==5.2.1
+kombu==5.4.2
+amqp==5.3.1
+billiard==4.2.1
+vine==5.1.0
+
+# ===================================
+# Twisted & Async
+# ===================================
+Twisted==24.11.0
+autobahn==24.4.2
+Automat==24.8.1
+hyperlink==21.0.0
+incremental==24.7.2
+constantly==23.10.4
+txaio==23.1.1
+
+# ===================================
+# Utilities
+# ===================================
+six==1.17.0
+attrs==24.3.0
+python3-openid==3.2.0
+pytz==2024.2
+sqlparse==0.5.3
+typing_extensions==4.12.2
+
+# ===================================
+# Cryptography & SSL
+# ===================================
+pyOpenSSL==24.3.0
+pyasn1==0.6.1
+pyasn1-modules==0.4.1
+service-identity==24.2.0
+cffi==1.17.1
+pycparser==2.22
+
+# ===================================
+# CLI & Interactive
+# ===================================
+click==8.1.8
 click-didyoumean==0.3.1
 click-plugins==1.1.1
 click-repl==0.3.0
-constantly==23.10.4
-cryptography==43.0.0
-defusedxml==0.6.0
-distlib==0.3.8
-dj-database-url==0.3.0
-dj-static==0.0.6
-django-allauth==0.42.0
-django-countries==6.1.3
-django-crispy-forms==1.9.0
-django-debug-toolbar==3.2.1
-filelock==3.12.2
-gunicorn==20.0.4
-hyperlink==21.0.0
-idna==2.10
-importlib-metadata==2.0.0
-incremental==24.7.2
-kombu==5.2.4
-oauthlib==3.1.0
-packaging==20.4
-prompt_toolkit==3.0.47
-pyasn1==0.6.0
-pyasn1_modules==0.4.0
-pycparser==2.22
-pyOpenSSL==24.2.1
-pyparsing==2.4.7
-python3-openid==3.2.0
-pytz==2020.1
-requests==2.31.0
-requests-oauthlib==1.3.0
-service-identity==24.1.0
-static3==0.7.0
-tomli==2.0.1
-Twisted==24.3.0
-txaio==23.1.1
-urllib3==1.26.18
-vine==5.1.0
-wcwidth==0.2.5
+prompt-toolkit==3.0.48
+wcwidth==0.2.13
+
+# ===================================
+# Packaging & Build
+# ===================================
+packaging==24.2
+tomli==2.2.1
+distlib==0.3.9
+filelock==3.16.1
+
+# ===================================
+# Character Encoding
+# ===================================
+charset-normalizer==3.4.1
+idna==3.10
+
+# ===================================
+# XML & Markup
+# ===================================
 webencodings==0.5.1
-zipp==3.3.0
-zope.interface==6.4.post2
+
+# ===================================
+# Metadata & Compatibility
+# ===================================
+importlib-metadata==8.5.0
+zipp==3.21.0
+zope.interface==7.2
+
+# ===================================
+# Legacy/Optional (review if needed)
+# ===================================
+# Removed: backports.zoneinfo - built into Python 3.12
+# Removed: cached-property - built into Python 3.8+
+# Removed: dj-database-url - not used in settings.py
+# Removed: dj-static - deprecated, using whitenoise
+# Removed: django-countries - not found in codebase
+# Removed: django-crispy-forms - not found in codebase
+# Removed: django-debug-toolbar - development only, add if needed
+# Removed: gunicorn - using daphne for ASGI
+# Removed: static3 - deprecated
+# Removed: chardet - replaced by charset-normalizer
+# Removed: environ - using django-environ instead

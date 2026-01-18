@@ -10,15 +10,24 @@ game_selection.innerHTML = /*html*/ `
             width:100%;
             height:100%;
             display: grid;
-            grid-template-columns: repeat(3, 30rem);
+            grid-template-columns: repeat(4, 25rem);
             grid-template-areas: 
-            "single multiple online";
+            "single multiple online othello";
             justify-content: space-around;
             transition: grid 0.3s ease;
+            gap: 2rem;
+        }
+        @media (max-width: 1900px){
+            :host{
+                grid-template-columns: repeat(4, 22rem);
+            }
         }
         @media (max-width: 1600px){
             :host{
-                grid-template-columns: repeat(3, 25rem);
+                grid-template-columns: repeat(2, 25rem);
+                grid-template-areas: 
+                "single multiple"
+                "online othello";
             }
         }
         .playerImg{
@@ -79,6 +88,7 @@ game_selection.innerHTML = /*html*/ `
     <single-player></single-player>
     <multi-player></multi-player>
     <online-game></online-game>
+    <othello-cart></othello-cart>
     `
     // .cart-animation:nth-child(1) { animation-delay: 0s; }
     // .cart-animation:nth-child(2) { animation-delay: 1s; }

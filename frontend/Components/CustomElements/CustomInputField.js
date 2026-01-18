@@ -319,6 +319,16 @@ const cssContent = /*css*/`
         background: transparent;
         border: 1px solid aqua;
     }
+
+    input::-ms-reveal,
+    input::-ms-clear {
+        display: none;
+    }
+
+    input::-webkit-reveal,
+    input::-webkit-password-toggle-verification {
+        display: none;
+    }
  
 `;
 

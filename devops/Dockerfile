@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY ./certs/server.key .
 
 COPY requirements.txt /app
 
-RUN apt-get update && apt-get install -y gcc
+RUN apt-get update && apt-get install -y gcc dos2unix
 
 RUN pip install --upgrade pip && \
     pip3 install -r requirements.txt
@@ -15,7 +15,7 @@ RUN pip install --upgrade pip && \
 ENV DJANGO_SETTINGS_MODULE=backend.settings
 
 COPY start.sh /
-RUN chmod +x /start.sh
+RUN dos2unix /start.sh && chmod +x /start.sh
 
 EXPOSE 8000
 

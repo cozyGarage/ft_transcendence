@@ -136,7 +136,8 @@ input-field {
 
 .input-container img.eye-icon {
     margin-left: auto; /* Push the eye icon to the right */
-    margin-right: 10%;
+    margin-right: 5%;
+    flex-shrink: 0;
 }
 
 
@@ -149,7 +150,9 @@ input-field {
     color: #2F679E;
     font-family: 'Sansation', sans-serif;
     font-weight: 700;
-    
+    width: 100%;
+    flex: 1;
+    padding-right: 0.5rem;
 }
 
 .input-container input::placeholder {

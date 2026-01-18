@@ -43,12 +43,14 @@ export class TwoFactorAuth extends HTMLElement {
             
             <p class="support">Need help ? <a href="mailto:ft.transcendencee.42@gmail.com">Contact support</a></p>        
         </div>
+        <custom-spinner time="50" style="display: none;"></custom-spinner>
             
         `;
 
         this.shadowRoot.querySelector('.btk').addEventListener('click', async (event) => {
             event.preventDefault();
-            const code = this.shadowRoot.querySelector('input').value;
+            const input = this.shadowRoot.querySelector('input');
+            const code = input.value;
 
             const resErrMsg = this.shadowRoot.querySelector('#error-message');
             if (!code) {
@@ -66,23 +68,35 @@ export class TwoFactorAuth extends HTMLElement {
             else {
                 resErrMsg.classList.remove('show', 'error', 'margin');
                 
-                const response = await fetch(`${HOST}/api/v1/auth/2fa/verify-code/`, {
-                    credentials: 'include',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ code: code })
-                });
+                const refreshBox = this.shadowRoot.querySelector("custom-spinner");
+                refreshBox.label = "Verifying..."
+                refreshBox.display();
 
-                const data = await response.json();
-                if (response.status === 200) {
-                    localStorage.setItem('accessToken', data.access_token);
-                    router.handleRoute('/home');
-                }
-                else {
-                    resErrMsg.textContent = data.message;
+                try {
+                    const response = await fetch(`${HOST}/api/v1/auth/2fa/verify-code/`, {
+                        credentials: 'include',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ code: code })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        localStorage.setItem('accessToken', data.access_token);
+                        router.handleRoute('/home');
+                    }
+                    else {
+                        resErrMsg.textContent = data.message || "Invalid 2FA code";
+                        resErrMsg.classList.add('show', 'error', 'margin');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    resErrMsg.textContent = "Network error. Please try again later.";
                     resErrMsg.classList.add('show', 'error', 'margin');
+                } finally {
+                    refreshBox.close();
                 }
             }
         });

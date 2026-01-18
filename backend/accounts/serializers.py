@@ -3,27 +3,28 @@ from .models import User
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True, min_length=8, max_length=128)
     password2 = serializers.CharField(write_only=True, min_length=8, max_length=128)
-    
+
     class Meta:
         model = User
         fields = ["email", "username", "password1", "password2"]
-    
+
     def validate(self, data):
-        if data['password1'] != data['password2']:
+        if data["password1"] != data["password2"]:
             raise serializers.ValidationError("Passwords must match.")
         return data
 
     def create(self, validated_data):
-
         user = User.objects.create_user(
-            email = validated_data.get('email'),
-            username = validated_data.get('username'),
-            password = validated_data.get('password1'),
+            email=validated_data.get("email"),
+            username=validated_data.get("username"),
+            password=validated_data.get("password1"),
         )
         return user
+
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=6)
@@ -35,24 +36,34 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'username', 'access_token', 'refresh_token', 'is_2fa_enabled']
-    
+        fields = [
+            "email",
+            "password",
+            "username",
+            "access_token",
+            "refresh_token",
+            "is_2fa_enabled",
+        ]
+
     def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
-        request = self.context.get('request')
+        email = attrs.get("email")
+        password = attrs.get("password")
+        request = self.context.get("request")
         user = authenticate(request=request, email=email, password=password)
 
         if not user:
-            raise AuthenticationFailed('Invalid email or password')
-        if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
-        
+            raise AuthenticationFailed("Invalid email or password")
+
+        from django.conf import settings
+
+        if settings.ACCOUNT_EMAIL_VERIFICATION_REQUIRED and not user.is_verified:
+            raise AuthenticationFailed("Email is not verified")
+
         tokens = user.tokens
         return {
-            'email': user.email,
-            'username': user.username,
-            'access_token': tokens['access_token'],
-            'refresh_token': tokens['refresh_token'],
-            'is_2fa_enabled': user.is_2fa_enabled,
+            "email": user.email,
+            "username": user.username,
+            "access_token": tokens["access_token"],
+            "refresh_token": tokens["refresh_token"],
+            "is_2fa_enabled": user.is_2fa_enabled,
         }

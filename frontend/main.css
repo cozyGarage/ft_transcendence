@@ -1,11 +1,25 @@
 @font-face {
     font-family: 'Sansation';
     src: url('/assets/fonts/sansation/Sansation_Regular.ttf');
+    font-display: swap; /* Prevent invisible text during font loading */
 }
 
 @font-face {
     font-family: 'Sansation Bold';
     src: url('/assets/fonts/sansation/Sansation_Bold.ttf');
+    font-display: swap;
+}
+
+:root {
+    /* Color palette */
+    --primary-cyan: #00FFFC;
+    --secondary-cyan: #00b9be;
+    --dark-blue: #00142b;
+    --medium-blue: #003347;
+    --text-white: #ffffff;
+    
+    /* Common spacing */
+    --border-radius: 15px;
 }
 
 * {
@@ -17,6 +31,24 @@
     user-select: none;
     font-family: 'Sansation';
     /* border: 1px solid red; */
+}
+
+/* Utility classes for common patterns */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 html,
@@ -61,7 +93,7 @@ body {
 
 body {
     color: #ffffff;
-    background: linear-gradient(73deg, #00142ba8 10%, #003347a8 100%), url(/images/background.jpg);
+    background: linear-gradient(73deg, #00142ba8 10%, #003347a8 100%), url(/images/background.webp);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -284,7 +316,7 @@ friends-request-list {
 .profile-icon {
     width: 100%;
     height: 100%;
-    background: url("/assets/images/profile/tanjuro.jpg");
+    background: url("/assets/images/profile/tanjuro.webp");
     background-position: center;
     background-size: cover;
 }
