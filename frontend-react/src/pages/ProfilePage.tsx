@@ -6,8 +6,7 @@ import {
   Percent, 
   Gamepad2, 
   UserPlus, 
-  MessageCircle,
-  Ban
+  MessageCircle
 } from 'lucide-react';
 import { playerApi, friendApi } from '@/api/player';
 import { useAuthStore } from '@/store/authStore';
@@ -21,7 +20,7 @@ export default function ProfilePage() {
   const { player: currentPlayer } = useAuthStore();
   const [player, setPlayer] = useState<Player | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isFriend, setIsFriend] = useState(false);
+  const [isFriend] = useState(false);
 
   const isOwnProfile = !username || username === currentPlayer?.user?.username;
 

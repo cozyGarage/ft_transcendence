@@ -38,19 +38,6 @@ export default function TournamentPage() {
     }
   };
 
-  const getStatusColor = (status: Tournament['status']) => {
-    switch (status) {
-      case 'upcoming':
-        return 'primary';
-      case 'in_progress':
-        return 'warning';
-      case 'completed':
-        return 'success';
-      default:
-        return 'default';
-    }
-  };
-
   return (
     <div className="page-container">
       <div className="flex items-center justify-between mb-6">

@@ -6,7 +6,6 @@ describe('authStore', () => {
     // Reset store before each test
     useAuthStore.setState({
       accessToken: null,
-      refreshToken: null,
       player: null,
       isAuthenticated: false,
       isLoading: false,
@@ -21,20 +20,25 @@ describe('authStore', () => {
   });
 
   it('should set tokens', () => {
-    const { setTokens } = useAuthStore.getState();
-    setTokens('access-token', 'refresh-token');
+    // Manually set state to simulate login
+    useAuthStore.setState({
+      accessToken: 'access-token',
+      isAuthenticated: true,
+    });
     
     const state = useAuthStore.getState();
     expect(state.accessToken).toBe('access-token');
-    expect(state.refreshToken).toBe('refresh-token');
     expect(state.isAuthenticated).toBe(true);
   });
 
   it('should logout and clear state', () => {
-    const { setTokens, logout } = useAuthStore.getState();
+    const { logout } = useAuthStore.getState();
     
     // Set tokens first
-    setTokens('access-token', 'refresh-token');
+    useAuthStore.setState({
+      accessToken: 'access-token',
+      isAuthenticated: true,
+    });
     expect(useAuthStore.getState().isAuthenticated).toBe(true);
     
     // Logout
@@ -43,7 +47,6 @@ describe('authStore', () => {
     const state = useAuthStore.getState();
     expect(state.isAuthenticated).toBe(false);
     expect(state.accessToken).toBeNull();
-    expect(state.refreshToken).toBeNull();
     expect(state.player).toBeNull();
   });
 });

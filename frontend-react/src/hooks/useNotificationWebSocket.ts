@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 export function useNotificationWebSocket() {
   const wsRef = useRef<WebSocket | null>(null);
-  const { addNotification, incrementUnreadCount } = useNotificationStore();
+  const { addNotification } = useNotificationStore();
   const { accessToken, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
@@ -27,7 +27,6 @@ export function useNotificationWebSocket() {
       if (data.type === 'notification') {
         const notification = data.notification as Notification;
         addNotification(notification);
-        incrementUnreadCount();
 
         // Show toast notification
         switch (notification.type) {
@@ -57,5 +56,5 @@ export function useNotificationWebSocket() {
     return () => {
       wsRef.current?.close();
     };
-  }, [isAuthenticated, accessToken, addNotification, incrementUnreadCount]);
+  }, [isAuthenticated, accessToken, addNotification]);
 }

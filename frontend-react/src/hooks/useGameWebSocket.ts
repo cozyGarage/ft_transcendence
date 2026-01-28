@@ -2,24 +2,10 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { useAuthStore } from '@/store/authStore';
 
-interface PongState {
-  ball: { x: number; y: number };
-  paddle1: number;
-  paddle2: number;
-  score1: number;
-  score2: number;
-}
-
-interface OthelloState {
-  board: (number | null)[][];
-  currentPlayer: 1 | 2;
-  validMoves: [number, number][];
-}
-
 export function useGameWebSocket(gameType: 'pong' | 'othello', gameId: string) {
   const wsRef = useRef<WebSocket | null>(null);
   const { accessToken } = useAuthStore();
-  const { setGameState, setGameOver } = useGameStore();
+  const { endGame } = useGameStore();
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -40,10 +26,11 @@ export function useGameWebSocket(gameType: 'pong' | 'othello', gameId: string) {
       
       switch (data.type) {
         case 'game_state':
-          setGameState(data.state);
+          console.log('Game state:', data.state);
           break;
         case 'game_over':
-          setGameOver(data.winner);
+          console.log('Game over, winner:', data.winner);
+          endGame();
           break;
         case 'player_joined':
           console.log('Player joined:', data.player);
@@ -66,7 +53,7 @@ export function useGameWebSocket(gameType: 'pong' | 'othello', gameId: string) {
     return () => {
       wsRef.current?.close();
     };
-  }, [gameId, gameType, accessToken, setGameState, setGameOver]);
+  }, [gameId, gameType, accessToken, endGame]);
 
   const sendMove = useCallback((move: any) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {

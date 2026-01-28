@@ -1,11 +1,11 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useChatStore } from '@/store/chatStore';
 import { useAuthStore } from '@/store/authStore';
-import type { Message, ChatRoom } from '@/types';
+import type { Message } from '@/types';
 
 export function useChatWebSocket() {
   const wsRef = useRef<WebSocket | null>(null);
-  const { activeRoom, setMessages, addMessage, setConnected } = useChatStore();
+  const { activeRoom, addMessage } = useChatStore();
   const { accessToken } = useAuthStore();
 
   useEffect(() => {
@@ -18,7 +18,6 @@ export function useChatWebSocket() {
 
     wsRef.current.onopen = () => {
       console.log('Chat WebSocket connected');
-      setConnected(true);
     };
 
     wsRef.current.onmessage = (event) => {
@@ -30,7 +29,6 @@ export function useChatWebSocket() {
 
     wsRef.current.onclose = () => {
       console.log('Chat WebSocket disconnected');
-      setConnected(false);
     };
 
     wsRef.current.onerror = (error) => {
@@ -40,7 +38,7 @@ export function useChatWebSocket() {
     return () => {
       wsRef.current?.close();
     };
-  }, [activeRoom, accessToken, addMessage, setConnected]);
+  }, [activeRoom, accessToken, addMessage]);
 
   const sendMessage = useCallback((content: string) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {

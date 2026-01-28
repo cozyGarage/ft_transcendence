@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 import { useChatStore } from '@/store/chatStore';
 import { useAuthStore } from '@/store/authStore';
 import { chatApi } from '@/api/chat';
-import { Card, Avatar, Input, Button, Spinner } from '@/components/ui';
+import { Card, Avatar, Button, Spinner } from '@/components/ui';
 import { formatDistanceToNow } from 'date-fns';
 import type { ChatRoom, Message } from '@/types';
 

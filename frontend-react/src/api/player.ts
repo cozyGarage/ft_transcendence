@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { Player, LeaderboardEntry, GameMatch, PaginatedResponse } from '@/types';
+import type { Player, GameMatch, PaginatedResponse } from '@/types';
 
 export const playerApi = {
   getPlayer: async (username: string): Promise<Player> => {

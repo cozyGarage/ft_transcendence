@@ -12,13 +12,11 @@ export default function NotFoundPage() {
           Oops! The page you're looking for doesn't exist or has been moved.
         </p>
         <div className="flex gap-4 justify-center">
-          <Button
-            as={Link}
-            to="/home"
-            leftIcon={<Home className="w-4 h-4" />}
-          >
-            Go Home
-          </Button>
+          <Link to="/home">
+            <Button leftIcon={<Home className="w-4 h-4" />}>
+              Go Home
+            </Button>
+          </Link>
           <Button
             variant="secondary"
             onClick={() => window.history.back()}

@@ -35,7 +35,7 @@ global.IntersectionObserver = class IntersectionObserver {
 
 // Mock WebSocket
 global.WebSocket = class WebSocket {
-  constructor(url: string) {}
+  constructor(_url: string) {}
   close() {}
   send() {}
   addEventListener() {}

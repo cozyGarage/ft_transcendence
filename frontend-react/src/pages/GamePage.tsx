@@ -8,7 +8,7 @@ import OthelloGame from '@/components/game/OthelloGame';
 import GameLobby from '@/components/game/GameLobby';
 
 export default function GamePage() {
-  const { gameType, gameMode, isInGame, isInLobby, setGameType, setGameMode, startGame, resetGame } = useGameStore();
+  const { gameType, isInGame, isInLobby, setGameType, setGameMode, startGame } = useGameStore();
   const [selectedType, setSelectedType] = useState<GameType | null>(null);
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null);
 

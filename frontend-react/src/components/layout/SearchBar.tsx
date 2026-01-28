@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
-import { clsx } from 'clsx';
+
 import { playerApi } from '@/api/player';
 import { Avatar, Spinner } from '@/components/ui';
 import type { Player } from '@/types';

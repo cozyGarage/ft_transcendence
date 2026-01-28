@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Users, Search as SearchIcon } from 'lucide-react';
-import { clsx } from 'clsx';
 import { useAuthStore } from '@/store/authStore';
 import { useNotificationStore } from '@/store/notificationStore';
 import { Avatar } from '@/components/ui';

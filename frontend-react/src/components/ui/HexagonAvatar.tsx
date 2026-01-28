@@ -4,7 +4,6 @@ import type { League } from '@/types';
 
 interface HexagonAvatarProps {
   src?: string;
-  alt?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   league?: League;
   className?: string;
@@ -13,7 +12,6 @@ interface HexagonAvatarProps {
 
 export default function HexagonAvatar({
   src,
-  alt = 'Avatar',
   size = 'md',
   league,
   className,

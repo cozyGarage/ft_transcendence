@@ -175,7 +175,7 @@ function ProfileSettings() {
 }
 
 function SecuritySettings() {
-  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+  const [is2FAEnabled] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
   const [qrCode, setQRCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
