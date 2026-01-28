@@ -17,6 +17,7 @@
   - [Installation](#installation)
   - [Running the Application](#running-the-application)
     - [Using Docker Compose](#using-docker-compose)
+- [Project Structure](#project-structure)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
@@ -33,28 +34,50 @@
 
 ## Features
 
-- 🎮 **Real-time Multiplayer:** Play competitive Pong matches with friends or other players.
-- 🔒 **Secure Authentication:** Login system with support for Two-Factor Authentication (2FA).
-- 💬 **Chat System:** Built-in real-time private and group messaging.
-- 🏆 **Leaderboards:** Track player performance and rankings.
-- 🖼 **User Profiles:** Customize profiles and view game statistics.
+- 🎮 **Real-time Multiplayer:** Play competitive Pong and Othello matches with friends or other players.
+- 🤖 **AI Opponents:** Practice against intelligent AI opponents.
+- 🔒 **Secure Authentication:** Login system with support for Two-Factor Authentication (2FA) and OAuth.
+- 💬 **Chat System:** Built-in real-time private messaging.
+- 🏆 **Tournaments:** Create and join tournaments with bracket-style competition.
+- 📊 **Leaderboards:** Track player performance and rankings with league system.
+- 🖼 **User Profiles:** Customize profiles and view detailed game statistics.
+- 🔔 **Real-time Notifications:** Stay updated with friend requests, game invites, and more.
 - ⚙️ **Settings:** Personalize game and account settings.
+- ⛓️ **Blockchain Integration:** Tournament scores stored on blockchain for transparency.
 
 ---
 
 ## Technologies Used
 
 ### Front-End
-- Vanilla JavaScript - For dynamic user interactions.
-- HTML/CSS - For structuring and styling the interface.
+- **React 18** - Modern component-based UI library with hooks.
+- **TypeScript** - Type-safe JavaScript for better developer experience.
+- **Vite** - Next-generation frontend build tool with HMR.
+- **React Router 7** - Client-side routing with protected routes.
+- **Zustand** - Lightweight state management for React.
+- **Tailwind CSS** - Utility-first CSS framework for rapid UI development.
+- **Axios** - Promise-based HTTP client with interceptors.
+- **React Hook Form + Zod** - Form handling with schema validation.
+- **Lucide React** - Beautiful, customizable icons.
 
 ### Back-End
-- Django - Python framework for developing secure, scalable applications.
-- PostgreSQL - Database system for storing game data.
+- **Django 5.0 LTS** - Python framework for developing secure, scalable applications.
+- **Django REST Framework** - Toolkit for building Web APIs.
+- **Django Channels** - WebSocket support for real-time features.
+- **PostgreSQL** - Database system for storing game data.
+- **Redis** - In-memory data store for caching and WebSocket channel layers.
 
-### Other Tools
-- Docker - For containerized deployment.
-- WebSockets - Facilitates real-time gameplay and chat.
+### DevOps & Infrastructure
+- **Docker** - Containerized deployment with multi-stage builds.
+- **Docker Compose** - Multi-container orchestration.
+- **Nginx** - Reverse proxy and static file serving.
+- **Prometheus** - Metrics collection and monitoring.
+- **Grafana** - Metrics visualization and dashboards.
+- **Alertmanager** - Alert handling and notifications.
+
+### Blockchain
+- **Hardhat** - Ethereum development environment.
+- **Solidity** - Smart contract language for tournament scores.
 
 ---
 
@@ -65,7 +88,8 @@ Follow these steps to set up and run the project locally.
 ### Prerequisites
 
 Ensure you have the following installed:
-- [Python 3.9+](https://www.python.org/)
+- [Node.js 18+](https://nodejs.org/) (for frontend development)
+- [Python 3.11+](https://www.python.org/)
 - [Docker](https://www.docker.com/)
 - [Git](https://git-scm.com/)
 
@@ -75,7 +99,7 @@ Ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/cozygarage/ft_transcendence.git
+   git clone https://github.com/your-username/ft_transcendence.git
    ```
 
 2. Navigate to the project directory:
@@ -83,21 +107,73 @@ Ensure you have the following installed:
    cd ft_transcendence
    ```
 
+3. Install frontend dependencies (for development):
+   ```bash
+   cd frontend-react
+   npm install
+   ```
+
 ---
 
 ### Running the Application
 
-#### Using Docker Compose
+#### Using Docker Compose (Production)
 
 To start the project, simply run the following command:
 
-  ```bash
-  docker compose up --build
-  ```
+```bash
+docker compose up --build
+```
 
 This command will build the Docker containers and start the application. The backend and frontend will be automatically set up and available for access.
 
 The application will be accessible at `https://localhost`.
+
+#### Development Mode
+
+For frontend development with hot-reload:
+
+```bash
+cd frontend-react
+npm run dev
+```
+
+For backend development:
+
+```bash
+cd backend
+python manage.py runserver
+```
+
+---
+
+## Project Structure
+
+```
+ft_transcendence/
+├── backend/                 # Django backend
+│   ├── accounts/           # User authentication & profiles
+│   ├── chat/               # Real-time chat system
+│   ├── friend/             # Friend management
+│   ├── game/               # Game logic & WebSocket consumers
+│   ├── notification/       # Notification system
+│   ├── Player/             # Player profiles & stats
+│   └── tournament/         # Tournament management
+├── frontend-react/          # React + TypeScript frontend
+│   ├── src/
+│   │   ├── api/           # API client & endpoints
+│   │   ├── components/    # Reusable UI components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── layouts/       # Page layouts
+│   │   ├── pages/         # Page components
+│   │   ├── store/         # Zustand state stores
+│   │   └── types/         # TypeScript type definitions
+│   ├── package.json
+│   └── vite.config.ts
+├── blockchain/              # Smart contracts
+├── devops/                  # Docker & monitoring configs
+└── docker-compose.yml
+```
 
 
 ---
