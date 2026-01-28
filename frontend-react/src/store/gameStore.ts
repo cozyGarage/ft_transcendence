@@ -35,15 +35,15 @@ export const useGameStore = create<GameState>((set, get) => ({
   opponent: null,
   score: { player: 0, opponent: 0 },
 
-  setGameType: (type) => set({ gameType: type }),
+  setGameType: (type: GameType) => set({ gameType: type }),
   
-  setGameMode: (mode) => set({ gameMode: mode }),
+  setGameMode: (mode: GameMode) => set({ gameMode: mode }),
 
   startGame: () => set({ isInGame: true, isInLobby: false }),
 
   endGame: () => set({ isInGame: false }),
 
-  joinLobby: (gameType) => {
+  joinLobby: (gameType: GameType) => {
     set({ isInLobby: true, gameType });
   },
 
@@ -52,9 +52,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     get().disconnectFromGame();
   },
 
-  setOpponent: (opponent) => set({ opponent }),
+  setOpponent: (opponent: { id: number; username: string; avatar: string } | null) => set({ opponent }),
 
-  updateScore: (playerScore, opponentScore) => {
+  updateScore: (playerScore: number, opponentScore: number) => {
     set({ score: { player: playerScore, opponent: opponentScore } });
   },
 
@@ -70,7 +70,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
-  connectToGame: (gameId) => {
+  connectToGame: (gameId: string) => {
     const { gameType } = get();
     const wsPath = gameType === 'othello' ? 'othello' : 'pong';
     const wsUrl = `wss://127.0.0.1:8000/ws/game/${wsPath}/${gameId}/`;
