@@ -19,18 +19,22 @@ export default {
           700: '#009996',
           800: '#006663',
           900: '#003330',
+          cyan: '#00FFFC',
+          secondary: '#00b9be',
         },
         secondary: {
           DEFAULT: '#FF00FF',
           500: '#FF00FF',
         },
         dark: {
-          DEFAULT: '#0a0a0a',
-          50: '#1a1a1a',
-          100: '#2a2a2a',
-          200: '#3a3a3a',
-          300: '#4a4a4a',
-          400: '#5a5a5a',
+          DEFAULT: '#00142b', // Legacy dark-blue
+          50: '#001a33',
+          100: '#00264d',
+          200: '#003347', // Legacy medium-blue
+          300: '#004060',
+          400: '#005580',
+          blue: '#00142b',
+          medium: '#003347',
         },
         accent: {
           cyan: '#00FFFC',

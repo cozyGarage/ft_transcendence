@@ -2,51 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Fonts - Commented out until font files are added
+/* Custom Fonts - Matching Legacy Frontend */
 @font-face {
   font-family: 'Sansation';
-  src: url('/fonts/Sansation-Regular.ttf') format('truetype');
+  src: url('/fonts/Sansation_Regular.ttf');
+  font-display: swap;
   font-weight: normal;
-  font-display: swap;
 }
 
 @font-face {
-  font-family: 'Sansation';
-  src: url('/fonts/Sansation-Bold.ttf') format('truetype');
+  font-family: 'Sansation Bold';
+  src: url('/fonts/Sansation_Bold.ttf');
+  font-display: swap;
   font-weight: bold;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: 'Cyber';
-  src: url('/fonts/Blender-Pro-Bold.otf') format('opentype');
-  font-display: swap;
+/* CSS Variables - Matching Legacy Palette */
+:root {
+  /* Color palette */
+  --primary-cyan: #00FFFC;
+  --secondary-cyan: #00b9be;
+  --dark-blue: #00142b;
+  --medium-blue: #003347;
+  --text-white: #ffffff;
+  
+  /* Common spacing */
+  --border-radius: 15px;
 }
-*/
 
-/* Base Styles */
+/* Base Styles - Matching Legacy */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  user-select: none;
+  font-family: 'Sansation', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-html {
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  scrollbar-width: none;
   scroll-behavior: smooth;
+  scrollbar-color: var(--medium-blue) transparent;
 }
 
 body {
-  font-family: 'Sansation', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  min-height: 100vh;
-  overflow-x: hidden;
+  color: var(--text-white);
+  background: linear-gradient(73deg, #00142ba8 10%, #003347a8 100%), url(/images/background.webp);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: 'Sansation';
+  position: relative;
+}
+
+/* Top and Bottom SVG Decorations */
+body::before {
+  content: "";
+  background: url(/images/top.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 7%;
+  position: absolute;
+  opacity: 0.25;
+  z-index: -1;
+  top: 1%;
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  background: url(/images/bottom.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 7%;
+  position: absolute;
+  opacity: 0.25;
+  z-index: -1;
+  top: 93%;
+  pointer-events: none;
 }
 
 #root {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Custom Scrollbar */
