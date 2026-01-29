@@ -3,6 +3,11 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 class TournamentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        # Check if user is authenticated
+        if self.scope['user'].is_anonymous:
+            await self.close(code=4001)
+            return
+        
         self.tournament_id = self.scope['url_route']['kwargs']['tournament_id']
         self.room_group_name = f'tournament_{self.tournament_id}'
 
@@ -45,6 +50,11 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
 class TournamentDataSyncConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        # Check if user is authenticated
+        if self.scope['user'].is_anonymous:
+            await self.close(code=4001)
+            return
+        
         self.tournament_name = self.scope['url_route']['kwargs']['tournament_name']
         self.room_group_name = f'tournament_{self.tournament_name}'
 

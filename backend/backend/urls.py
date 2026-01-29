@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from django.conf import settings
 from django_prometheus import exports
+from api.views import api_root
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +30,9 @@ urlpatterns = [
     path('notification/', include("notification.urls"), name="notification"),
     path('friend/', include("friend.urls"), name="friend"),
     path('api/v1/auth/', include('accounts.urls')),
+
+    # API root for developer convenience
+    path('api/v1/', api_root, name='api-root'),
 
     path('metrics', exports.ExportToDjangoView, name='prometheus-django-metrics'),
 ]

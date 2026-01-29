@@ -15,9 +15,9 @@ export default function PongGame() {
     if (!ctx) return;
 
     // Game state
-    let paddleHeight = 100;
-    let paddleWidth = 10;
-    let ballRadius = 10;
+    const paddleHeight = 100;
+    const paddleWidth = 10;
+    const ballRadius = 10;
     
     let paddle1Y = (canvas.height - paddleHeight) / 2;
     let paddle2Y = (canvas.height - paddleHeight) / 2;
@@ -26,7 +26,7 @@ export default function PongGame() {
     let ballSpeedX = 5;
     let ballSpeedY = 3;
 
-    let keys: { [key: string]: boolean } = {};
+    const keys: { [key: string]: boolean } = {};
 
     const handleKeyDown = (e: KeyboardEvent) => {
       keys[e.key] = true;

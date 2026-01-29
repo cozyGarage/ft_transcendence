@@ -6,7 +6,7 @@ django.setup() # used to fix the error "django.core.exceptions.AppRegistryNotRea
 from .models import *
 from friend.models import *
 from .serializers import *
-
+import bleach
 from django.core.exceptions import ObjectDoesNotExist
 
 def is_block(current_user, receiver_user):
@@ -14,7 +14,7 @@ def is_block(current_user, receiver_user):
     block = BlockUser.objects.filter(blocker=receiver_user, blocked=current_user).first()
     if blocked or block:
         return True
-    return True
+    return False
 
 def is_friend(current_user, receiver_user):
     user_friends = Friendship.get_friendship(current_user)
@@ -26,6 +26,11 @@ def is_friend(current_user, receiver_user):
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
+        # Check if user is authenticated
+        if self.scope['user'].is_anonymous:
+            self.close(code=4001)
+            return
+        
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.group_name = f"chat_{self.room_name}"
         
@@ -66,9 +71,17 @@ class ChatConsumer(WebsocketConsumer):
     def save_and_broadcast_message(self, content):
 
         conversation = self.get_or_create_conversation()
+        
+        # Sanitize message content to prevent XSS
+        sanitized_content = bleach.clean(
+            content,
+            tags=[],  # No HTML tags allowed
+            strip=True
+        )
+        
         message_data = {
             'user': self.current_user.id,
-            'content': content,
+            'content': sanitized_content,
             'conversation': conversation.id,
         }
         message_serializer = MessageSerializer(data=message_data)

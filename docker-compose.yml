@@ -4,6 +4,7 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:
   prometheus_data:
   grafana_data:
   alertmanager_data:
@@ -22,6 +23,7 @@ services:
       - app_network
     depends_on:
       - database
+      - redis
     env_file:
       - .env
   
@@ -49,6 +51,16 @@ services:
       - .env 
     networks:
       - app_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+    restart: unless-stopped
 
   pgadmin4:
     image: dpage/pgadmin4

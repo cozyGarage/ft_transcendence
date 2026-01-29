@@ -1,8 +1,9 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/authStore';
 
-export const API_BASE_URL = 'https://127.0.0.1:8000';
-export const WS_BASE_URL = 'wss://127.0.0.1:8000';
+// Use environment variables with fallback to development defaults
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+export const WS_BASE_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000';
 
 // Create axios instance
 export const api = axios.create({

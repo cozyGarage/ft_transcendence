@@ -13,12 +13,15 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django_ratelimit.decorators import ratelimit
 import jwt
+import datetime
 
 
 class UserRegisterView(generics.GenericAPIView):
     serializer_class = UserRegisterSerializer
 
+    @ratelimit(key='ip', rate='3/h', block=True)
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -53,6 +56,7 @@ class UserRegisterView(generics.GenericAPIView):
 
 
 @api_view(["POST"])
+@ratelimit(key='ip', rate='5/m', block=True)
 def login(request):
     serializer = LoginSerializer(data=request.data, context={"request": request})
     if not serializer.is_valid():
@@ -64,6 +68,16 @@ def login(request):
     data = serializer.validated_data
     if data["is_2fa_enabled"]:
         user = User.objects.get(email=data["email"])
+        # Create a signed temporary token instead of exposing user ID
+        temp_token = jwt.encode(
+            {
+                'user_id': user.id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
+                'purpose': '2fa_verification'
+            },
+            settings.SECRET_KEY,
+            algorithm='HS256'
+        )
         response = Response(
             {
                 "message": "2FA verification required",
@@ -73,10 +87,11 @@ def login(request):
         )
         response.set_cookie(
             key="temp_token",
-            value=str(user.id),
+            value=temp_token,
             httponly=True,
             samesite="None",
             secure=True,
+            max_age=300,  # 5 minutes
         )
         return response
 

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Fonts */
+/* Custom Fonts - Commented out until font files are added
 @font-face {
   font-family: 'Sansation';
   src: url('/fonts/Sansation-Regular.ttf') format('truetype');
@@ -22,6 +22,7 @@
   src: url('/fonts/Blender-Pro-Bold.otf') format('opentype');
   font-display: swap;
 }
+*/
 
 /* Base Styles */
 * {

@@ -7,7 +7,17 @@ from .serializers import NotificationSerializer, UserSerializer
 
 class UserNotificationConsumer(WebsocketConsumer):
     def connect(self):
+        # Check if user is authenticated
+        if self.scope['user'].is_anonymous:
+            self.close(code=4001)
+            return
+        
         self.id = self.scope['url_route']['kwargs']['id']
+        # Verify user can only connect to their own notification channel
+        if str(self.scope['user'].id) != str(self.id):
+            self.close(code=4003)
+            return
+        
         self.group_name = f'notification_{self.id}'
         
         # Join room group

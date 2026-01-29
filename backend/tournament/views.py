@@ -15,10 +15,15 @@ from dotenv import load_dotenv
 from web3 import Web3
 import os
 from eth_account import Account
-import os
+import json
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Load ABI from server-side file
+ABI_FILE_PATH = os.path.join(os.path.dirname(__file__), 'tournament_abi.json')
+with open(ABI_FILE_PATH, 'r') as f:
+    CONTRACT_ABI = json.load(f)
 
 
 # Web3.py setup - with defaults for optional blockchain features
@@ -39,18 +44,18 @@ w3 = Web3(Web3.HTTPProvider(SEPOLIA_URL))
 def store_tournament_score_on_blockchain(request):
     if request.method == "POST":
         try:
-            # Extract data from the request
+            # Extract data from the request (NO LONGER ACCEPTING ABI FROM CLIENT)
             tournament_id = int(request.data.get("tournamentId"))
             winner_id = int(request.data.get("winnerId"))
             winner_score = int(request.data.get("winnerIdScore"))
             loser_id = int(request.data.get("loserId"))
             loser_score = int(request.data.get("loserIdScore"))
-            CONTRACT_ABI = request.data.get("abi")
+            
             # get tournament
             tournament = Tournament.objects.get(tournament_id=tournament_id)
             # delete tournament
             tournament.delete()
-            # Create contract instance
+            # Create contract instance using server-side ABI
             contract = w3.eth.contract(address=CONTRACT_ADDRESS, abi=CONTRACT_ABI)
             # Create account from private key
             account = w3.eth.account.privateKeyToAccount(PRIVATE_KEY)

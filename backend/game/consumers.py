@@ -40,6 +40,11 @@ async def timer(client, seconds):
 class GameConsumer(AsyncWebsocketConsumer):
     rooms = {}
     async def connect(self):
+        # Check if user is authenticated
+        if self.scope['user'].is_anonymous:
+            await self.close(code=4001)
+            return
+        
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = self.room_name
         self.close_code = 0

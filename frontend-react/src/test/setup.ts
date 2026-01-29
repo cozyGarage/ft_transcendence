@@ -24,20 +24,29 @@ Object.defineProperty(window, 'matchMedia', {
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   disconnect() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   observe() {}
   takeRecords() {
     return [];
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   unobserve() {}
 } as any;
 
 // Mock WebSocket
 global.WebSocket = class WebSocket {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(_url: string) {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   close() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   send() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   addEventListener() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeEventListener() {}
 } as any;

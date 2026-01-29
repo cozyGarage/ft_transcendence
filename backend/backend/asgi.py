@@ -1,7 +1,7 @@
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
+from backend.middleware import JWTAuthMiddleware
 from chat import routing as chat_routing
 from notification import routing as notification_routing
 from tournament import routing as tournament_routing
@@ -20,43 +20,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 
 django_asgi_app = get_asgi_application()
 
-# from channels.middleware import BaseMiddleware
-# from channels.db import database_sync_to_async
-# from django.contrib.auth.models import AnonymousUser
-# from rest_framework_simplejwt.tokens import AccessToken
-# from django.contrib.auth import get_user_model
-# User = get_user_model()
-# @database_sync_to_async
-# def get_user_from_token(token):
-#     try:
-#         # Validate the token and get the user ID
-#         access_token = AccessToken(token)
-#         user_id = access_token['user_id']
-#         return User.objects.get(id=user_id)
-#     except Exception:
-#         return AnonymousUser()
-
-# class JWTAuthMiddleware(BaseMiddleware):
-#     async def __call__(self, scope, receive, send):
-#         headers = dict(scope['headers'])
-#         authorization_header = headers.get(b'authorization', None)
-
-#         if authorization_header:
-#             try:
-#                 auth_type, token = authorization_header.decode().split()
-#                 if auth_type.lower() == 'bearer':
-#                     scope['user'] = await get_user_from_token(token)
-#             except Exception:
-#                 scope['user'] = AnonymousUser()
-#         else:
-#             scope['user'] = AnonymousUser()
-#         return await super().__call__(scope, receive, send)
-
-
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
-        "websocket": AuthMiddlewareStack(
+        "websocket": JWTAuthMiddleware(
             URLRouter(
                 chat_routing.websocket_urlpatterns
                 + notification_routing.websocket_urlpatterns

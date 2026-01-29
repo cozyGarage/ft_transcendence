@@ -5,7 +5,10 @@ from rest_framework import status
 from accounts.models import User
 from io import BytesIO
 from PIL import Image
+from django_ratelimit.decorators import ratelimit
 import pyotp, qrcode, base64
+import jwt
+from django.conf import settings
 
 
 @api_view(['GET'])
@@ -54,16 +57,30 @@ def disable_2fa(request):
     return Response({"message": "2FA disabled successfully"})
 
 @api_view(['POST'])
+@ratelimit(key='ip', rate='5/m', block=True)
 def verify_2fa_code(request):
     code = request.data.get('code')
     if not code:
         return Response({"message": "2FA code is required"}, status=400)
     
-    user_id = request.COOKIES.get('temp_token')
-    if not user_id:
+    temp_token = request.COOKIES.get('temp_token')
+    if not temp_token:
         return Response({"message": "You're not authorized to access this resource"}, status=401)
     
-    user = User.objects.get(id=user_id)
+    try:
+        # Verify the signed token
+        payload = jwt.decode(temp_token, settings.SECRET_KEY, algorithms=['HS256'])
+        
+        # Check token purpose
+        if payload.get('purpose') != '2fa_verification':
+            return Response({"message": "Invalid token"}, status=401)
+        
+        user_id = payload.get('user_id')
+        user = User.objects.get(id=user_id)
+    except jwt.ExpiredSignatureError:
+        return Response({"message": "2FA session expired, please login again"}, status=401)
+    except (jwt.InvalidTokenError, User.DoesNotExist):
+        return Response({"message": "Invalid token"}, status=401)
 
     totp = pyotp.TOTP(user.totp_secret_key)
     if totp.verify(code):

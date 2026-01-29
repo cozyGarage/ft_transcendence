@@ -21,7 +21,11 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
+    host: true,
+    watch: {
+      usePolling: true,  // For Docker on Windows/Mac
+    },
     proxy: {
       '/api': {
         target: 'https://localhost:8000',

@@ -1,0 +1,17 @@
+{
+  "name": "ft_transcendence",
+  "short_name": "FT Transcendence",
+  "description": "Online Pong Game Platform - Play competitive Pong games and join tournaments",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#00142b",
+  "theme_color": "#00FFFC",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
