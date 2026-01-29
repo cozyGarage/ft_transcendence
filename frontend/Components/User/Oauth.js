@@ -13,7 +13,7 @@ export default class OAuth extends HTMLElement {
             const loginPage = document.querySelector('login-page');
               
             const messageDiv = loginPage.shadowRoot.querySelector('#error-message');
-            messageDiv.innerHTML = error;
+            messageDiv.textContent = error;
             messageDiv.classList.add('show', 'error');
         } else {
             console.error('An error occurred during the OAuth process');
